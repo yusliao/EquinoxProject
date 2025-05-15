@@ -1,9 +1,12 @@
 ﻿using Equinox.Application.Interfaces;
+using Equinox.Application.Interfaces.Production;
 using Equinox.Application.Services;
+using Equinox.Application.Services.Production;
 using Equinox.Domain.Commands;
 using Equinox.Domain.Core.Events;
 using Equinox.Domain.Events;
 using Equinox.Domain.Interfaces;
+using Equinox.Domain.Interfaces.Production;
 using Equinox.Infra.CrossCutting.Bus;
 using Equinox.Infra.Data.Context;
 using Equinox.Infra.Data.EventSourcing;
@@ -28,6 +31,7 @@ namespace Equinox.Infra.CrossCutting.IoC
 
             // Application
             builder.Services.AddScoped<ICustomerAppService, CustomerAppService>();
+            builder.Services.AddScoped<IPackagingAppService, PackagingAppService>();
 
             // Domain - Events
             builder.Services.AddScoped<INotificationHandler<CustomerRegisteredEvent>, CustomerEventHandler>();
@@ -41,6 +45,7 @@ namespace Equinox.Infra.CrossCutting.IoC
 
             // Infra - Data
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<IPackagingRepository, PackagingRepository>();
             builder.Services.AddScoped<EquinoxContext>();
 
             // Infra - Data EventSourcing

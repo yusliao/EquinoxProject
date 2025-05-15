@@ -34,6 +34,8 @@ namespace Equinox.Infra.Data.Context
                 property.SetColumnType("varchar(100)");
 
             modelBuilder.ApplyConfiguration(new CustomerMap());
+            modelBuilder.ApplyConfiguration(new CellPackagingMap());
+            modelBuilder.ApplyConfiguration(new ModulePackagingMap());
                         
             base.OnModelCreating(modelBuilder);
         }

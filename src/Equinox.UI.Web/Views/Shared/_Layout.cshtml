@@ -21,6 +21,15 @@
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li><a class="nav-link text-light" asp-area="" asp-controller="Customer" asp-action="Index">Customers</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="productionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                生产管理
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="productionDropdown">
+                                <a class="dropdown-item" asp-controller="Production" asp-action="CellPackaging">电芯包装</a>
+                                <a class="dropdown-item" asp-controller="Production" asp-action="ModulePackaging">模组PACK包装</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

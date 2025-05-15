@@ -1,0 +1,131 @@
+@model Equinox.Application.ViewModels.Production.ModulePackagingViewModel
+
+@{
+    ViewData["Title"] = "模组PACK包装";
+}
+
+<div class="container-fluid">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="AddModulePackaging">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group">
+                    <label asp-for="BatchNumber" class="control-label"></label>
+                    <input asp-for="BatchNumber" class="form-control" />
+                    <span asp-validation-for="BatchNumber" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ModuleCode" class="control-label"></label>
+                    <input asp-for="ModuleCode" class="form-control" />
+                    <span asp-validation-for="ModuleCode" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PackCode" class="control-label"></label>
+                    <input asp-for="PackCode" class="form-control" />
+                    <span asp-validation-for="PackCode" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PackageType" class="control-label"></label>
+                    <select asp-for="PackageType" class="form-control">
+                        <option value="">请选择包装类型</option>
+                        <option value="标准包装">标准包装</option>
+                        <option value="特殊包装">特殊包装</option>
+                    </select>
+                    <span asp-validation-for="PackageType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Quantity" class="control-label"></label>
+                    <input asp-for="Quantity" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="OperatorId" class="control-label"></label>
+                    <input asp-for="OperatorId" class="form-control" />
+                    <span asp-validation-for="OperatorId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" asp-for="Status" value="待确认" />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="提交" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4>批次查询</h4>
+            <div class="input-group mb-3">
+                <input type="text" id="searchBatchNumber" class="form-control" placeholder="输入批次号">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="searchBatch()">查询</button>
+                </div>
+            </div>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>批次号</th>
+                        <th>模组编码</th>
+                        <th>PACK编码</th>
+                        <th>包装类型</th>
+                        <th>数量</th>
+                        <th>操作员</th>
+                        <th>包装日期</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody id="searchResults">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function searchBatch() {
+            var batchNumber = $('#searchBatchNumber').val();
+            if (!batchNumber) {
+                alert('请输入批次号');
+                return;
+            }
+
+            $.get('/Production/GetModulePackagingByBatch', { batchNumber: batchNumber })
+                .done(function (data) {
+                    var tbody = $('#searchResults');
+                    tbody.empty();
+                    
+                    data.forEach(function (item) {
+                        var row = $('<tr>');
+                        row.append($('<td>').text(item.batchNumber));
+                        row.append($('<td>').text(item.moduleCode));
+                        row.append($('<td>').text(item.packCode));
+                        row.append($('<td>').text(item.packageType));
+                        row.append($('<td>').text(item.quantity));
+                        row.append($('<td>').text(item.operatorId));
+                        row.append($('<td>').text(new Date(item.packageDate).toLocaleString()));
+                        row.append($('<td>').text(item.status));
+                        tbody.append(row);
+                    });
+                })
+                .fail(function () {
+                    alert('查询失败，请重试');
+                });
+        }
+    </script>
+} 
